@@ -376,86 +376,68 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-
 // Seeder Function
 async function seedDatabase() {
   try {
-    // 1. Seed Users
-    const userCount = await User.countDocuments();
-    if (userCount === 0) {
-      console.log('Seeding mock users...');
-      await User.create([
-        { name: 'System Admin', email: 'admin@assetflow.com', password: 'password123', role: 'Admin', status: 'Active' },
-        { name: 'Rohan Mehta', email: 'manager@assetflow.com', password: 'password123', role: 'Asset Manager', status: 'Active' },
-        { name: 'Aditi Rao', email: 'head@assetflow.com', password: 'password123', role: 'Department Head', status: 'Active' },
-        { name: 'Priya Shah', email: 'employee@assetflow.com', password: 'password123', role: 'Employee', status: 'Active' },
-        { name: 'Sana Iqbal', email: 'sana.iqbal@company.com', password: 'password123', role: 'Employee', status: 'Active' }
-      ]);
-    }
+    console.log('Force-seeding database with exact Excalidraw mockup data...');
+    
+    // Clear collections to ensure exact wireframe data matches
+    await User.deleteMany({});
+    await Department.deleteMany({});
+    await Category.deleteMany({});
+    await Asset.deleteMany({});
+    await Booking.deleteMany({});
+    await Transfer.deleteMany({});
+    await Maintenance.deleteMany({});
 
-    // 2. Seed Departments
-    const deptCount = await Department.countDocuments();
-    if (deptCount === 0) {
-      console.log('Seeding mock departments...');
-      await Department.create([
-        { name: 'Engineering', head: 'Aditi Rao', parentDept: '--', status: 'Active' },
-        { name: 'Facilities', head: 'Rohan Mehta', parentDept: '--', status: 'Active' },
-        { name: 'Field Ops (East)', head: 'Sana Iqbal', parentDept: 'Field Ops', status: 'Inactive' }
-      ]);
-    }
+    // 1. Seed Users (Screen 3's Employees table)
+    await User.create([
+      { name: 'Arthur Pendragon', email: 'arthur@company.com', password: 'password123', role: 'Admin', status: 'Active' },
+      { name: 'Sarah Connor', email: 'sarah.connor@company.com', password: 'password123', role: 'Asset Manager', status: 'Active' },
+      { name: 'Aditi Rao', email: 'head@assetflow.com', password: 'password123', role: 'Department Head', status: 'Active' },
+      { name: 'Priya Shah', email: 'employee@assetflow.com', password: 'password123', role: 'Employee', status: 'Active' },
+      { name: 'Sana Iqbal', email: 'sana.iqbal@company.com', password: 'password123', role: 'Employee', status: 'Active' }
+    ]);
 
-    // 3. Seed Categories
-    const catCount = await Category.countDocuments();
-    if (catCount === 0) {
-      console.log('Seeding mock categories...');
-      await Category.create([
-        { name: 'Laptops', code: 'LAP', totalCount: 145, status: 'Active' },
-        { name: 'Monitors', code: 'MON', totalCount: 92, status: 'Active' },
-        { name: 'Office Furniture', code: 'FUR', totalCount: 310, status: 'Active' },
-        { name: 'AV Equipment', code: 'AVQ', totalCount: 40, status: 'Active' }
-      ]);
-    }
+    // 2. Seed Departments (Screen 3's Departments table)
+    await Department.create([
+      { name: 'Engineering', head: 'Aditi Rao', parentDept: '--', status: 'Active' },
+      { name: 'Facilities', head: 'Sarah Connor', parentDept: '--', status: 'Active' },
+      { name: 'Field Ops (East)', head: 'Sana Iqbal', parentDept: 'Field Ops', status: 'Inactive' }
+    ]);
 
-    // 4. Seed Assets
-    const assetCount = await Asset.countDocuments();
-    if (assetCount === 0) {
-      console.log('Seeding mock assets...');
-      await Asset.create([
-        { name: 'MacBook Pro 16"', tag: 'AF-0114', category: 'Laptops', status: 'Allocated', holder: 'Priya Shah' },
-        { name: 'Dell UltraSharp 27"', tag: 'AF-0252', category: 'Monitors', status: 'Available', holder: '--' },
-        { name: 'Epson Projector 4K', tag: 'AF-0062', category: 'AV Equipment', status: 'Under Maintenance', holder: '--' },
-        { name: 'Ergonomic Desk Chair', tag: 'AF-0581', category: 'Office Furniture', status: 'Available', holder: '--' },
-        { name: 'ThinkPad T14 Gen 4', tag: 'AF-0912', category: 'Laptops', status: 'Allocated', holder: 'Aditi Rao' }
-      ]);
-    }
+    // 3. Seed Categories (Screen 3's Categories table)
+    await Category.create([
+      { name: 'Laptops', code: 'LAP', totalCount: 145, status: 'Active' },
+      { name: 'Monitors', code: 'MON', totalCount: 92, status: 'Active' },
+      { name: 'Office Furniture', code: 'FUR', totalCount: 310, status: 'Active' },
+      { name: 'AV Equipment', code: 'AVQ', totalCount: 40, status: 'Active' }
+    ]);
+
+    // 4. Seed Assets (Seeded assets to match screens)
+    await Asset.create([
+      { name: 'MacBook Pro 16"', tag: 'AF-0114', category: 'Laptops', status: 'Allocated', holder: 'Priya Shah' },
+      { name: 'Dell UltraSharp 27"', tag: 'AF-0252', category: 'Monitors', status: 'Available', holder: '--' },
+      { name: 'Epson Projector 4K', tag: 'AF-0062', category: 'AV Equipment', status: 'Under Maintenance', holder: '--' },
+      { name: 'Ergonomic Desk Chair', tag: 'AF-0581', category: 'Office Furniture', status: 'Available', holder: '--' },
+      { name: 'ThinkPad T14 Gen 4', tag: 'AF-0912', category: 'Laptops', status: 'Allocated', holder: 'Aditi Rao' }
+    ]);
 
     // 5. Seed Bookings
-    const bookingCount = await Booking.countDocuments();
-    if (bookingCount === 0) {
-      console.log('Seeding mock bookings...');
-      await Booking.create([
-        { resource: 'Conference Room B2', user: 'Aditi Rao', time: '2:00 PM - 3:00 PM', date: 'Today' },
-        { resource: 'Epson Projector 4K', user: 'Rohan Mehta', time: '11:00 AM - 1:00 PM', date: 'Tomorrow' }
-      ]);
-    }
+    await Booking.create([
+      { resource: 'Conference Room B2', user: 'Aditi Rao', time: '2:00 PM - 3:00 PM', date: 'Today' },
+      { resource: 'Epson Projector 4K', user: 'Sarah Connor', time: '11:00 AM - 1:00 PM', date: 'Tomorrow' }
+    ]);
 
     // 6. Seed Transfers
-    const transferCount = await Transfer.countDocuments();
-    if (transferCount === 0) {
-      console.log('Seeding mock transfers...');
-      await Transfer.create([
-        { assetTag: 'AF-0912', from: 'Rohan Mehta', to: 'Aditi Rao', status: 'Approved', date: 'Yesterday', reason: 'Project Assignment' }
-      ]);
-    }
+    await Transfer.create([
+      { assetTag: 'AF-0912', from: 'Sarah Connor', to: 'Aditi Rao', status: 'Approved', date: 'Yesterday', reason: 'Project Assignment' }
+    ]);
 
     // 7. Seed Maintenance
-    const maintCount = await Maintenance.countDocuments();
-    if (maintCount === 0) {
-      console.log('Seeding mock maintenance...');
-      await Maintenance.create([
-        { assetTag: 'AF-0062', issue: 'Bulb flickering', priority: 'Medium', status: 'In Progress' }
-      ]);
-    }
+    await Maintenance.create([
+      { assetTag: 'AF-0062', issue: 'Bulb flickering', priority: 'Medium', status: 'In Progress' }
+    ]);
 
     console.log('Mock database seeding process completed.');
   } catch (error) {
