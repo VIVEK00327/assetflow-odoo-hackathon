@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,38 +35,39 @@ export default function Login() {
   // Submit Handler
   const onSubmit = async (data) => {
     setIsLoading(true);
-    
-    // Simulate API request delay
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    
-    setIsLoading(false);
-
-    if (isSignUp) {
-      if (data.password !== data.confirmPassword) {
-        toast.error('Passwords do not match');
-        return;
+    try {
+      if (isSignUp) {
+        if (data.password !== data.confirmPassword) {
+          toast.error('Passwords do not match');
+          setIsLoading(false);
+          return;
+        }
+        const response = await axios.post('http://localhost:5000/api/auth/register', {
+          name: data.email.split('@')[0],
+          email: data.email,
+          password: data.password
+        });
+        const { token, user } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        toast.success('Account created! Logged in as Employee.');
+        navigate('/dashboard');
+      } else {
+        const response = await axios.post('http://localhost:5000/api/auth/login', {
+          email: data.email,
+          password: data.password
+        });
+        const { token, user } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        toast.success(`Successfully logged in as ${user.role}!`);
+        navigate('/dashboard');
       }
-      toast.success('Account created! Logging in as Employee...');
-      localStorage.setItem('user', JSON.stringify({
-        email: data.email,
-        role: 'Employee'
-      }));
-      navigate('/dashboard');
-    } else {
-      // Determine user's role from current email or use Employee by default
-      let matchedRole = 'Employee';
-      const emailLower = data.email.toLowerCase();
-      if (emailLower.startsWith('admin')) matchedRole = 'Admin';
-      else if (emailLower.startsWith('manager')) matchedRole = 'Asset Manager';
-      else if (emailLower.startsWith('head')) matchedRole = 'Department Head';
-
-      localStorage.setItem('user', JSON.stringify({
-        email: data.email,
-        role: matchedRole
-      }));
-
-      toast.success(`Successfully logged in as ${matchedRole}!`);
-      navigate('/dashboard');
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Authentication failed';
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
