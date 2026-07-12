@@ -6,7 +6,7 @@ AssetFlow is a centralized ERP platform designed to simplify the tracking, alloc
 *   **Participant 1:** [VIVEK]
 *   **Participant 2:** [SARTHAK]
 *   **Participant 3:** [PRIYANSHU]
-*   **Participant 4:** []
+*   **Participant 4:** [PRIYAM]
 
 ## 🚀 Vision & Mission
 Our mission is to build a user-centric, responsive application that streamlines asset management. We aim to replace inefficient spreadsheets with a robust system that handles asset lifecycles, resource bookings, and maintenance workflows without unnecessary complexity.
