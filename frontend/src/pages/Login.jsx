@@ -17,8 +17,8 @@ export default function Login() {
     formState: { errors }
   } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'arthur@company.com',
+      password: 'password123',
       confirmPassword: ''
     }
   });
@@ -27,8 +27,8 @@ export default function Login() {
   const handleToggleMode = () => {
     setIsSignUp(!isSignUp);
     clearErrors();
-    setValue('email', '');
-    setValue('password', '');
+    setValue('email', isSignUp ? 'arthur@company.com' : '');
+    setValue('password', isSignUp ? 'password123' : '');
     setValue('confirmPassword', '');
   };
 
@@ -212,30 +212,10 @@ export default function Login() {
           {/* New Here? / Sign Up Block */}
           {!isSignUp ? (
             <div className="space-y-4">
-              {/* Developer Preset Logins */}
-              <div className="space-y-2">
-                <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Developer Presets</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: 'Admin (Arthur)', email: 'arthur@company.com' },
-                    { label: 'Manager (Sarah)', email: 'sarah.connor@company.com' },
-                    { label: 'Head (Aditi)', email: 'head@assetflow.com' },
-                    { label: 'Employee (Priya)', email: 'employee@assetflow.com' }
-                  ].map((preset) => (
-                    <button
-                      key={preset.email}
-                      type="button"
-                      onClick={() => {
-                        setValue('email', preset.email);
-                        setValue('password', 'password123');
-                        toast.success(`Loaded preset for ${preset.label.split(' ')[0]}`);
-                      }}
-                      className="px-2.5 py-1.5 bg-gray-950/50 hover:bg-violet-600/10 border border-gray-800 hover:border-violet-500/30 rounded-lg text-[10px] font-bold text-gray-300 hover:text-white transition-all cursor-pointer truncate text-left"
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
+              {/* Admin credentials note */}
+              <div className="bg-gray-950/60 border border-gray-800 rounded-xl p-3.5 text-xs text-gray-400 leading-normal text-center select-text">
+                Admin credentials (auto-filled): <br/>
+                <span className="text-white font-bold text-[11px]">arthur@company.com</span> / <span className="text-white font-bold text-[11px]">password123</span>
               </div>
 
               <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider pt-2">
